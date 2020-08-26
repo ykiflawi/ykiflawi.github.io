@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Arithmatics Practice</title>
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <label for="operation">What do you want to practice:</label>
+    <select name="operation" id="operation">
+      <option value="add" selected>Adding</option>
+      <option value="subtract">Subtracting</option>
+      <option value="multiply">Multiplying</option>
+      <option value="divide">dividing</option>
+    </select>
+    <br />
+    <br />
+    <label for="minFirstOperand">First Number:</label>
+    <input
+      type="text"
+      size="4"
+      value="0"
+      name="minFirstOperand"
+      id="minFirstOperand"
+    />
+    <label for="maxFirstOperand">To</label>
+    <input
+      type="text"
+      size="4"
+      value="100"
+      name="maxFirstOperand"
+      id="maxFirstOperand"
+    />
+    <br />
+    <br />
+    <label for="minSecondOperand">Second Number:</label>
+    <input
+      type="text"
+      size="4"
+      value="0"
+      name="minSecondOperand"
+      id="minSecondOperand"
+    />
+    <label for="maxSecondOperand">To</label>
+    <input
+      type="text"
+      size="4"
+      value="10"
+      name="maxSecondOperand"
+      id="maxSecondOperand"
+    />
+    <br />
+    <br />
+    <button id="generateQuestion">Generate Question</button>
+    <br />
+    <br />
+    <div id="questionBox">
+      Question:
+      <h3 id="question">xxx</h3>
+    </div>
+    <div id="answerBox">
+      Answer:
+      <input type="text" id="answer" />
+      <button id="checkAnswer">Check Answer</button>
+      <br />
+      <div id="correctAnswer" style="color: green"></div>
+      <div id="incorrectAnswer" style="color: red"></div>
+    </div>
+  </body>
+  <script type="module" src="./main.js"></script>
+</html>
