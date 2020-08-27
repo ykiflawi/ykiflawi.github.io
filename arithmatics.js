@@ -90,8 +90,10 @@ export class Generator {
         <input type="text" size="${
           String(firstOperand).length
         }" id="answer${index}" />
-        <div id="correctAnswer${index}" style="color: green"></div>
-        <div id="incorrectAnswer${index}" style="color: red"></div>
+        <div id="feedback">
+          <div id="correctAnswer${index}" style="color: green"></div>
+          <div id="incorrectAnswer${index}" style="color: red"></div>
+        </div>
       </div>
       <br />
       <br />
