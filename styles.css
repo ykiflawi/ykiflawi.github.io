@@ -18,3 +18,26 @@
   border-bottom: solid 1px black;
   overflow: hidden;
 }
+
+#questions {
+  border: solid;
+  margin-left: 200px;
+  margin-right: 200px;
+  padding: 20px;
+}
+
+.questionBox {
+  display: inline-block;
+  margin: 20px;
+}
+
+#questionSetupBox {
+  margin-top: 50px;
+  text-align: center;
+}
+
+#generateQuestionsBox {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}

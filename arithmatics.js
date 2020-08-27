@@ -1,47 +1,66 @@
 const FIRST_OPERAND = 1
 const SECOND_OPERAND = 2
 
-class Generator {
-  constructor(
-    operator = "+",
-    minFirstOperand = 0,
-    maxFirstOperand = 10,
-    minSecondOperand = 0,
-    maxSecondOperand = 10,
-    answer = null
-  ) {
-    this.operator = operator
-    this.minFirstOperand = minFirstOperand
-    this.maxFirstOperand = maxFirstOperand
-    this.minSecondOperand = minSecondOperand
-    this.maxSecondOperand = maxSecondOperand
-    this.answer = answer
+export class Generator {
+  static operator = "+"
+  static minFirstOperand = 0
+  static maxFirstOperand = 10
+  static minSecondOperand = 0
+  static maxSecondOperand = 10
+  static numQuestions = 5
+  static questions = []
+
+  static generateQuestions() {
+    Generator.questions = []
+    let questionBoxes = ""
+    for (let index = 0; index < Generator.numQuestions; index++) {
+      Generator.questions.push(new Generator())
+      questionBoxes =
+        questionBoxes +
+        `<div id="questionBox${index}" class="questionBox"></div>\n`
+    }
+
+    $("#questions").html(questionBoxes)
+
+    Generator.questions.forEach((question, index) => {
+      question.generateQuestion(index)
+    })
+
+    $("[id^=answerBox]").on("keyup", function (e) {
+      e.preventDefault()
+      if (e.keyCode === 13) {
+        const index = parseInt(e.target.id.substring(6))
+        Generator.checkAnswers(parseInt($(`#${e.target.id}`).val()), index)
+      }
+    })
+
+    window.scrollTo(0, 0)
+    $("#answer0").select()
+  }
+
+  static checkAnswers(answer, index) {
+    if (answer === this.questions[index].correctAnswer) {
+      $(`#incorrectAnswer${index}`).hide()
+      $(`#correctAnswer${index}`).html("Correct!")
+      $(`#correctAnswer${index}`).show()
+      $(`#answer${index + 1}`).select()
+    } else {
+      $(`#correctAnswer${index}`).hide()
+      $(`#incorrectAnswer${index}`).html("Try Again!")
+      $(`#incorrectAnswer${index}`).show()
+      $(`#answer${index}`).select()
+    }
+  }
+
+  constructor(answer = null) {
     this.correctAnswer = null
   }
 
-  setOperator(operator) {
-    this.operator = operator
-  }
-
-  setOperands(
-    minFirstOperand,
-    maxFirstOperand,
-    minSecondOperand,
-    maxSecondOperand
-  ) {
-    this.minFirstOperand = minFirstOperand
-    this.maxFirstOperand = maxFirstOperand
-    this.minSecondOperand = minSecondOperand
-    this.maxSecondOperand = maxSecondOperand
-  }
-
-  generateQuestion() {
-    $("#correctAnswer").hide()
-    $("#correctAnswer").hide()
+  generateQuestion(index) {
     const firstOperand = this.getRandomOperand(FIRST_OPERAND)
     const secondOperand = this.getRandomOperand(SECOND_OPERAND)
 
-    switch (this.operator) {
+    switch (Generator.operator) {
       case "+": {
         this.correctAnswer = firstOperand + secondOperand
         break
@@ -59,50 +78,46 @@ class Generator {
         break
       }
     }
-    $("#question").html(
+    $(`#questionBox${index}`).html(
       `
       <span class="equation stacked">
         <span class="number">${firstOperand}</span>
-        <span class="operator">${this.operator}</span>
+        <span class="operator">${Generator.operator}</span>
         <span class="number">${secondOperand}</span>
         <span class="equals">=</span>
-      </span>`
+      </span>
+      <div id="answerBox${index}">
+        <input type="text" size="${
+          String(firstOperand).length
+        }" id="answer${index}" />
+        <div id="correctAnswer${index}" style="color: green"></div>
+        <div id="incorrectAnswer${index}" style="color: red"></div>
+      </div>
+      <br />
+      <br />
+    `
     )
-    $("#answer").val("")
-    $("#answer").focus()
+    $(`#correctAnswer${index}`).hide()
+    $(`#correctAnswer${index}`).hide()
+    $(`#answer${index}`).val("")
+    $(`#answer${index}`).focus()
   }
 
   getRandomOperand(operand) {
     if (operand === FIRST_OPERAND) {
       return Math.round(
-        Math.random() * (this.maxFirstOperand - this.minFirstOperand) +
-          this.minFirstOperand
+        Math.random() *
+          (Generator.maxFirstOperand - Generator.minFirstOperand) +
+          Generator.minFirstOperand
       )
     } else {
       return Math.round(
-        Math.random() * (this.maxSecondOperand - this.minSecondOperand) +
-          this.minSecondOperand
+        Math.random() *
+          (Generator.maxSecondOperand - Generator.minSecondOperand) +
+          Generator.minSecondOperand
       )
-    }
-  }
-
-  checkAnswer(answer) {
-    if (answer === this.correctAnswer) {
-      $("#incorrectAnswer").hide()
-      $("#correctAnswer").html("Correct!")
-      $("#correctAnswer").show()
-      setTimeout(function () {
-        $("#operator").trigger("change")
-      }, 600)
-    } else {
-      $("#correctAnswer").hide()
-      $("#incorrectAnswer").html("Try Again!")
-      $("#incorrectAnswer").show()
-      $("#answer").select()
     }
   }
 }
 
-export let g = new Generator()
-
-g.generateQuestion()
+Generator.generateQuestions()

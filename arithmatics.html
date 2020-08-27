@@ -10,70 +10,67 @@
   </head>
 
   <body>
-    <label for="operator">What do you want to practice:</label>
-    <select name="operator" id="operator">
-      <option value="+" selected>Adding</option>
-      <option value="-">Subtracting</option>
-      <option value="x">Multiplying</option>
-      <option value="/">dividing</option>
-    </select>
-    <br />
-    <br />
-    <label for="minFirstOperand">First Number:</label>
-    <input
-      type="text"
-      size="4"
-      value="0"
-      name="minFirstOperand"
-      id="minFirstOperand"
-    />
-    <label for="maxFirstOperand">To</label>
-    <input
-      type="text"
-      size="4"
-      value="10"
-      name="maxFirstOperand"
-      id="maxFirstOperand"
-    />
-    <br />
-    <br />
-    <label for="minSecondOperand">Second Number:</label>
-    <input
-      type="text"
-      size="4"
-      value="0"
-      name="minSecondOperand"
-      id="minSecondOperand"
-    />
-    <label for="maxSecondOperand">To</label>
-    <input
-      type="text"
-      size="4"
-      value="10"
-      name="maxSecondOperand"
-      id="maxSecondOperand"
-    />
-    <br />
-    <br />
-    <br />
-    <br />
-    <div id="questionBox">
-      <button id="newQuestion">New Question</button>
-      <h3>Question:</h3>
-      <h3 id="question">xxx</h3>
-    </div>
-    <br />
-    <br />
-    <div id="answerBox">
-      Answer:
-      <input type="text" id="answer" />
-      <!-- 
-      <button id="checkAnswer">Check Answer</button>
-      -->
+    <div id="questionSetupBox">
+      <h2>Set Up Questions</h2>
+      <label for="operator">What do you want to practice:</label>
+      <select name="operator" id="operator">
+        <option value="+" selected>Adding</option>
+        <option value="-">Subtracting</option>
+        <option value="x">Multiplying</option>
+        <option value="/">dividing</option>
+      </select>
       <br />
-      <div id="correctAnswer" style="color: green"></div>
-      <div id="incorrectAnswer" style="color: red"></div>
+      <br />
+      <label for="minFirstOperand">First Number:</label>
+      <input
+        type="text"
+        size="4"
+        value="0"
+        name="minFirstOperand"
+        id="minFirstOperand"
+      />
+      <label for="maxFirstOperand">To</label>
+      <input
+        type="text"
+        size="4"
+        value="10"
+        name="maxFirstOperand"
+        id="maxFirstOperand"
+      />
+      <br />
+      <br />
+      <label for="minSecondOperand">Second Number:</label>
+      <input
+        type="text"
+        size="4"
+        value="0"
+        name="minSecondOperand"
+        id="minSecondOperand"
+      />
+      <label for="maxSecondOperand">To</label>
+      <input
+        type="text"
+        size="4"
+        value="10"
+        name="maxSecondOperand"
+        id="maxSecondOperand"
+      />
+      <br />
+      <br />
+      <label for="numQuestions">Number of Questions: </label>
+      <input
+        type="text"
+        size="4"
+        value="5"
+        name="numQuestions"
+        id="numQuestions"
+      />
     </div>
+    <div id="generateQuestionsBox">
+      <h2>Generate Questions</h2>
+      <button id="generateQuestions">Generate Questions</button>
+    </div>
+    <div id="questions"></div>
   </body>
   <script type="module" src="./main.js"></script>
 </html>
