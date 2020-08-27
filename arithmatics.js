@@ -1,16 +1,16 @@
 const FIRST_OPERAND = 1
-const SECOND_OPERAND = 3
+const SECOND_OPERAND = 2
 
 class Generator {
   constructor(
-    operation = "add",
+    operator = "+",
     minFirstOperand = 0,
     maxFirstOperand = 10,
     minSecondOperand = 0,
     maxSecondOperand = 10,
     answer = null
   ) {
-    this.operation = operation
+    this.operator = operator
     this.minFirstOperand = minFirstOperand
     this.maxFirstOperand = maxFirstOperand
     this.minSecondOperand = minSecondOperand
@@ -19,34 +19,55 @@ class Generator {
     this.correctAnswer = null
   }
 
+  setOperator(operator) {
+    this.operator = operator
+  }
+
+  setOperands(
+    minFirstOperand,
+    maxFirstOperand,
+    minSecondOperand,
+    maxSecondOperand
+  ) {
+    this.minFirstOperand = minFirstOperand
+    this.maxFirstOperand = maxFirstOperand
+    this.minSecondOperand = minSecondOperand
+    this.maxSecondOperand = maxSecondOperand
+  }
+
   generateQuestion() {
     $("#correctAnswer").hide()
     $("#correctAnswer").hide()
     const firstOperand = this.getRandomOperand(FIRST_OPERAND)
     const secondOperand = this.getRandomOperand(SECOND_OPERAND)
 
-    switch (this.operation) {
-      case "add": {
-        $("#question").html(firstOperand + " + " + secondOperand)
+    switch (this.operator) {
+      case "+": {
         this.correctAnswer = firstOperand + secondOperand
         break
       }
-      case "subtract": {
-        $("#question").html(firstOperand + " - " + secondOperand)
+      case "-": {
         this.correctAnswer = firstOperand - secondOperand
         break
       }
-      case "multiply": {
-        $("#question").html(firstOperand + " x " + secondOperand)
+      case "x": {
         this.correctAnswer = firstOperand * secondOperand
         break
       }
-      case "divide": {
-        $("#question").html(firstOperand + " / " + secondOperand)
+      case "/": {
         this.correctAnswer = Math.round(firstOperand / secondOperand)
         break
       }
     }
+    $("#question").html(
+      `
+      <span class="equation stacked">
+        <span class="number">${firstOperand}</span>
+        <span class="operator">${this.operator}</span>
+        <span class="number">${secondOperand}</span>
+        <span class="equals">=</span>
+      </span>`
+    )
     $("#answer").val("")
     $("#answer").focus()
   }
@@ -71,7 +92,7 @@ class Generator {
       $("#correctAnswer").html("Correct!")
       $("#correctAnswer").show()
       setTimeout(function () {
-        $("#generateQuestion").trigger("click")
+        $("#operator").trigger("change")
       }, 600)
     } else {
       $("#correctAnswer").hide()
@@ -82,13 +103,6 @@ class Generator {
   }
 }
 
-export let g = null
+export let g = new Generator()
 
-export function generateQuestion(o, a, b, c, d) {
-  g = new Generator(o, a, b, c, d)
-  g.generateQuestion()
-}
-
-export function checkAnswer(r) {
-  g.checkAnswer(r)
-}
+g.generateQuestion()

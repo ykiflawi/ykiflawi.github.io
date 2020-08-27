@@ -1,0 +1,20 @@
+.equation.stacked {
+  display: inline-block;
+}
+
+.equation.stacked .number {
+  display: block;
+  margin-left: 1em; /* space for the operator */
+  text-align: right;
+}
+
+.equation.stacked .operator {
+  float: left;
+}
+
+.equation.stacked .equals {
+  display: block;
+  height: 0;
+  border-bottom: solid 1px black;
+  overflow: hidden;
+}
