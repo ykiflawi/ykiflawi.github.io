@@ -54,7 +54,7 @@ export class Generator {
       $(`#answer${index}`).select()
       nextQuestionIndex = index
     }
-    if (Generator.questions.length < nextQuestionIndex) {
+    if (nextQuestionIndex < Generator.questions.length) {
       window.scrollBy(
         0,
         $(`#answer${nextQuestionIndex}`)[0].getBoundingClientRect().y -
