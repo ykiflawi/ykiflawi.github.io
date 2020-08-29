@@ -49,3 +49,7 @@ input {
 #feedback {
   min-height: 1.2em;
 }
+
+.currentQuestionBox {
+  font-weight: bold;
+}

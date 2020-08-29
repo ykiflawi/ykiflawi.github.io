@@ -36,23 +36,37 @@ export class Generator {
 
     window.scrollTo(0, 0)
     $("#answer0").select()
+    $(`#questionBox0`).addClass("currentQuestionBox")
   }
 
   static checkAnswers(answer, index) {
+    let nextQuestionIndex = 0
     if (answer === this.questions[index].correctAnswer) {
       $(`#incorrectAnswer${index}`).hide()
       $(`#correctAnswer${index}`).html("Correct!")
       $(`#correctAnswer${index}`).show()
       $(`#answer${index + 1}`).select()
+      nextQuestionIndex = index + 1
     } else {
       $(`#correctAnswer${index}`).hide()
       $(`#incorrectAnswer${index}`).html("Try Again!")
       $(`#incorrectAnswer${index}`).show()
       $(`#answer${index}`).select()
+      nextQuestionIndex = index
     }
+    if (Generator.questions.length < nextQuestionIndex) {
+      window.scrollBy(
+        0,
+        $(`#answer${nextQuestionIndex}`)[0].getBoundingClientRect().y -
+          window.innerHeight / 2
+      )
+    }
+
+    $("[id^=questionBox]").removeClass("currentQuestionBox")
+    $(`#questionBox${nextQuestionIndex}`).addClass("currentQuestionBox")
   }
 
-  constructor(answer = null) {
+  constructor() {
     this.correctAnswer = null
   }
 
