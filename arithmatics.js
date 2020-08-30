@@ -2,7 +2,6 @@ const FIRST_OPERAND = 1
 const SECOND_OPERAND = 2
 const ENTER = 13
 const TAB = 9
-//const TAB = 9
 export class Generator {
   static operator = "+"
   static minFirstOperand = 0
@@ -29,7 +28,7 @@ export class Generator {
 
     // now that we have some question boxes populated with html, set some event triggers
     $("[id^=answerBox]").on("keydown", function (e) {
-      if (e.keyCode === ENTER || e.keyCode === TAB) {
+      if (e.keyCode === ENTER) {
         e.preventDefault()
         const index = parseInt(e.target.id.substring("answer_".length))
         Generator.checkAnswers(parseInt($(`#${e.target.id}`).val()), index)
@@ -58,6 +57,24 @@ export class Generator {
         $(`#incorrectAnswer${index}`).show()
       }
     })
+
+    console.log(
+      Math.max([
+        Math.abs(this.minFirstOperand),
+        Math.abs(this.maxFirstOperand),
+        Math.abs(this.minaxSecondOperand),
+        Math.abs(this.maxSecondOperand),
+      ])
+    )
+    // and stylesheets
+    $(`[id^="answer_"]`).width(
+      Math.max(
+        Math.abs(this.minFirstOperand),
+        Math.abs(this.maxFirstOperand),
+        Math.abs(this.minSecondOperand),
+        Math.abs(this.maxSecondOperand)
+      ).toString().length * 11
+    )
 
     window.scrollTo(0, 0)
     Generator.highlightQuestion(0)
@@ -150,7 +167,7 @@ export class Generator {
         </div>
       </div>
       <div id="answerBox${index}">
-        <input type="text" size="${
+        <input type="number" size="${
           String(firstOperand).length
         }" id="answer_${index}" />
         <div id="feedback">
