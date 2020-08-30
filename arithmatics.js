@@ -1,6 +1,8 @@
 const FIRST_OPERAND = 1
 const SECOND_OPERAND = 2
-
+const ENTER = 13
+const TAB = 9
+//const TAB = 9
 export class Generator {
   static operator = "+"
   static minFirstOperand = 0
@@ -21,49 +23,92 @@ export class Generator {
     }
 
     $("#questions").html(questionBoxes)
-
     Generator.questions.forEach((question, index) => {
       question.generateQuestion(index)
     })
 
-    $("[id^=answerBox]").on("keyup", function (e) {
-      e.preventDefault()
-      if (e.keyCode === 13) {
-        const index = parseInt(e.target.id.substring(6))
+    // now that we have some question boxes populated with html, set some event triggers
+    $("[id^=answerBox]").on("keydown", function (e) {
+      if (e.keyCode === ENTER || e.keyCode === TAB) {
+        e.preventDefault()
+        const index = parseInt(e.target.id.substring("answer_".length))
         Generator.checkAnswers(parseInt($(`#${e.target.id}`).val()), index)
       }
     })
 
+    $("[id^=answerBox]").on("focusin click", function (e) {
+      e.preventDefault()
+      const index = parseInt(e.target.id.substring("answer_".length))
+      Generator.highlightQuestion(index)
+    })
+
+    $("[id^=answerBox]").on("focusout", function (e) {
+      e.preventDefault()
+      $(`#${e.target.id}`).val($(`#${e.target.id}`).val().trim())
+      const answer = $(`#${e.target.id}`).val()
+      const index = parseInt(e.target.id.substring("answer_".length))
+      Generator.removeQuestionHighlight(index)
+      $(`#correctAnswer${index}`).hide()
+      $(`#incorrectAnswer${index}`).hide()
+      if (Generator.correctAnswer(parseInt(answer), index)) {
+        $(`#correctAnswer${index}`).html("Correct!")
+        $(`#correctAnswer${index}`).show()
+      } else if (answer.length > 0) {
+        $(`#incorrectAnswer${index}`).html("Try Again!")
+        $(`#incorrectAnswer${index}`).show()
+      }
+    })
+
     window.scrollTo(0, 0)
-    $("#answer0").select()
-    $(`#questionBox0`).addClass("currentQuestionBox")
+    Generator.highlightQuestion(0)
+  }
+
+  static highlightQuestion(index) {
+    $(`#questionBox${index}`).addClass("currentQuestionBox")
+    $(`#answer_${index}`).select()
+
+    if (index < Generator.questions.length) {
+      $("html").animate(
+        {
+          scrollTop:
+            window.scrollY +
+            $(`#answer_${index}`)[0].getBoundingClientRect().y -
+            window.innerHeight / 2,
+        },
+        "slow"
+      )
+    }
+  }
+
+  static removeQuestionHighlight(index) {
+    $(`#questionBox${index}`).removeClass("currentQuestionBox")
+  }
+
+  static correctAnswer(answer, index) {
+    return answer === this.questions[index].correctAnswer
   }
 
   static checkAnswers(answer, index) {
-    let nextQuestionIndex = 0
-    if (answer === this.questions[index].correctAnswer) {
+    if (this.correctAnswer(answer, index)) {
       $(`#incorrectAnswer${index}`).hide()
       $(`#correctAnswer${index}`).html("Correct!")
       $(`#correctAnswer${index}`).show()
-      $(`#answer${index + 1}`).select()
-      nextQuestionIndex = index + 1
+      if (index >= Generator.questions.length - 1) {
+        Generator.removeQuestionHighlight(index)
+        setTimeout(() => {
+          $("#answer_0").select()
+        }, 1000)
+      } else {
+        $(`#answer_${index + 1}`).select()
+        Generator.highlightQuestion(index + 1)
+      }
     } else {
       $(`#correctAnswer${index}`).hide()
       $(`#incorrectAnswer${index}`).html("Try Again!")
       $(`#incorrectAnswer${index}`).show()
-      $(`#answer${index}`).select()
-      nextQuestionIndex = index
+      $(`#answer_${index}`).select()
+      Generator.highlightQuestion(index)
     }
-    if (nextQuestionIndex < Generator.questions.length) {
-      window.scrollBy(
-        0,
-        $(`#answer${nextQuestionIndex}`)[0].getBoundingClientRect().y -
-          window.innerHeight / 2
-      )
-    }
-
-    $("[id^=questionBox]").removeClass("currentQuestionBox")
-    $(`#questionBox${nextQuestionIndex}`).addClass("currentQuestionBox")
   }
 
   constructor() {
@@ -94,16 +139,20 @@ export class Generator {
     }
     $(`#questionBox${index}`).html(
       `
-      <span class="equation stacked">
-        <span class="number">${firstOperand}</span>
-        <span class="operator">${Generator.operator}</span>
-        <span class="number">${secondOperand}</span>
-        <span class="equals">=</span>
-      </span>
+      <div>
+        <div class="questionNumber">${index + 1}.</div>
+        <div>
+        <div class="equation stacked">
+          <span class="operand">${firstOperand}</span>
+          <span class="operator">${Generator.operator}</span>
+          <span class="operand">${secondOperand}</span>
+          <span class="equals">=</span>
+        </div>
+      </div>
       <div id="answerBox${index}">
         <input type="text" size="${
           String(firstOperand).length
-        }" id="answer${index}" />
+        }" id="answer_${index}" />
         <div id="feedback">
           <div id="correctAnswer${index}" style="color: green"></div>
           <div id="incorrectAnswer${index}" style="color: red"></div>
@@ -115,8 +164,8 @@ export class Generator {
     )
     $(`#correctAnswer${index}`).hide()
     $(`#correctAnswer${index}`).hide()
-    $(`#answer${index}`).val("")
-    $(`#answer${index}`).focus()
+    $(`#answer_${index}`).val("")
+    $(`#answer_${index}`).focus()
   }
 
   getRandomOperand(operand) {

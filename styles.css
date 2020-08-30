@@ -2,14 +2,21 @@ input {
   text-align: right;
 }
 
+.questionNumber {
+  display: block;
+  float: left;
+  font-weight: normal;
+}
+
 .equation.stacked {
   display: inline-block;
 }
 
-.equation.stacked .number {
+.equation.stacked .operand {
   display: block;
   margin-left: 1em; /* space for the operator */
   text-align: right;
+  padding-right: 5px;
 }
 
 .equation.stacked .operator {
@@ -25,14 +32,16 @@ input {
 
 #questions {
   border: solid;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: 15%;
+  margin-right: 15%;
   padding: 20px;
 }
 
 .questionBox {
   display: inline-block;
-  margin: 20px;
+  margin: 20px 80px 20px 75px;
+  min-width: 75px;
+  text-align: right;
 }
 
 #questionSetupBox {
@@ -52,4 +61,13 @@ input {
 
 .currentQuestionBox {
   font-weight: bold;
+}
+
+[id^="answer_"] {
+  padding-right: 5px;
+  border-width: 1px;
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style: hidden;
 }
