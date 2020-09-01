@@ -10,10 +10,45 @@ export class Generator {
   static maxSecondOperand = 10
   static numQuestions = 5
   static questions = []
+  static initialLoad = true
+
+  static setDefaults(defaults) {
+    if (defaults.minFirst) {
+      Generator.minFirstOperand = parseInt(defaults.minFirst)
+      $("#minFirstOperand").val(defaults.minFirst)
+    }
+    if (defaults.maxFirst) {
+      this.maxFirstOperand = parseInt(defaults.maxFirst)
+      $("#maxFirstOperand").val(defaults.maxFirst)
+    }
+    if (defaults.minSecond) {
+      this.minSecondOperand = parseInt(defaults.minSecond)
+      $("#minSecondOperand").val(defaults.minSecond)
+    }
+    if (defaults.maxFirst) {
+      this.maxSecondOperand = parseInt(defaults.maxSecond)
+      $("#maxSecondOperand").val(defaults.maxSecond)
+    }
+    if (defaults.operator) {
+      this.operator = defaults.operator
+      $("#operator").val(defaults.operator)
+    }
+    if (defaults.numQuestions) {
+      this.numQuestions = parseInt(defaults.numQuestions)
+      $("#numQuestions").val(defaults.numQuestions)
+    }
+  }
 
   static generateQuestions() {
     Generator.questions = []
     let questionBoxes = ""
+
+    if (this.initialLoad) {
+      const defaults = $.currentQueryString()
+      this.setDefaults(defaults)
+      this.initialLoad = false
+    }
+
     for (let index = 0; index < Generator.numQuestions; index++) {
       Generator.questions.push(new Generator())
       questionBoxes =
@@ -58,14 +93,6 @@ export class Generator {
       }
     })
 
-    console.log(
-      Math.max([
-        Math.abs(this.minFirstOperand),
-        Math.abs(this.maxFirstOperand),
-        Math.abs(this.minaxSecondOperand),
-        Math.abs(this.maxSecondOperand),
-      ])
-    )
     // and stylesheets
     $(`[id^="answer_"]`).width(
       Math.max(
