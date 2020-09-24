@@ -30,10 +30,13 @@ input[type="number"] {
   margin-left: 1em; /* space for the operator */
   text-align: right;
   padding-right: 5px;
+  letter-spacing: 10px;
+  font-size: 1.5em;
 }
 
 .equation.stacked .operator {
   float: left;
+  font-size: 1.5em;
 }
 
 .equation.stacked .equals {
@@ -77,10 +80,11 @@ input[type="number"] {
 }
 
 [id^="answer_"] {
-  padding-right: 5px;
   border-width: 1px;
   border-top-style: hidden;
   border-right-style: hidden;
   border-left-style: hidden;
   border-bottom-style: hidden;
+  font-size: 1.5em;
+  letter-spacing: 10px;
 }

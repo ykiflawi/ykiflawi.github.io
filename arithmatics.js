@@ -100,7 +100,7 @@ export class Generator {
         Math.abs(this.maxFirstOperand),
         Math.abs(this.minSecondOperand),
         Math.abs(this.maxSecondOperand)
-      ).toString().length * 11
+      ).toString().length * 30
     )
 
     window.scrollTo(0, 0)
@@ -202,6 +202,8 @@ export class Generator {
           <div id="incorrectAnswer${index}" style="color: red"></div>
         </div>
       </div>
+      <br />
+      <br />
       <br />
       <br />
     `
