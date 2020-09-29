@@ -160,8 +160,8 @@ export class Generator {
   }
 
   generateQuestion(index) {
-    const firstOperand = this.getRandomOperand(FIRST_OPERAND)
-    const secondOperand = this.getRandomOperand(SECOND_OPERAND)
+    let firstOperand = this.getRandomOperand(FIRST_OPERAND)
+    let secondOperand = this.getRandomOperand(SECOND_OPERAND)
 
     switch (Generator.operator) {
       case "+": {
@@ -169,6 +169,11 @@ export class Generator {
         break
       }
       case "-": {
+        if (firstOperand < secondOperand) {
+          const tmp = firstOperand
+          firstOperand = secondOperand
+          secondOperand = tmp
+        }
         this.correctAnswer = firstOperand - secondOperand
         break
       }
