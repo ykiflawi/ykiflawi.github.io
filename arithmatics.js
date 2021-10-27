@@ -3,7 +3,7 @@ const SECOND_OPERAND = 2
 const ENTER = 13
 const TAB = 9
 export class Generator {
-  static operator = "+"
+  static operator = "a"
   static minFirstOperand = 0
   static maxFirstOperand = 10
   static minSecondOperand = 0
@@ -162,28 +162,57 @@ export class Generator {
   generateQuestion(index) {
     let firstOperand = this.getRandomOperand(FIRST_OPERAND)
     let secondOperand = this.getRandomOperand(SECOND_OPERAND)
+    let op = ""
 
-    if (firstOperand < secondOperand) {
+    if (
+      Generator.minFirstOperand >= 0 &&
+      Generator.minSecondOperand >= 0 &&
+      firstOperand < secondOperand
+    ) {
       const tmp = firstOperand
       firstOperand = secondOperand
       secondOperand = tmp
     }
 
     switch (Generator.operator) {
-      case "+": {
+      case "a": {
         this.correctAnswer = firstOperand + secondOperand
+        op = "+"
         break
       }
-      case "-": {
+      case "s": {
         this.correctAnswer = firstOperand - secondOperand
+        op = "-"
         break
       }
-      case "x": {
+      case "as": {
+        if (this.getRandomOperator(2) == 0) {
+          this.correctAnswer = firstOperand + secondOperand
+          op = "+"
+        } else {
+          this.correctAnswer = firstOperand - secondOperand
+          op = "-"
+        }
+        break
+      }
+      case "m": {
         this.correctAnswer = firstOperand * secondOperand
+        op = "*"
         break
       }
-      case "/": {
+      case "d": {
         this.correctAnswer = Math.round(firstOperand / secondOperand)
+        op = "/"
+        break
+      }
+      case "md": {
+        if (this.getRandomOperator(2) == 0) {
+          this.correctAnswer = firstOperand * secondOperand
+          op = "*"
+        } else {
+          this.correctAnswer = Math.round(firstOperand / secondOperand)
+          op = "/"
+        }
         break
       }
     }
@@ -194,7 +223,7 @@ export class Generator {
         <div>
         <div class="equation stacked">
           <span class="operand">${firstOperand}</span>
-          <span class="operator">${Generator.operator}</span>
+          <span class="operator">${op}</span>
           <span class="operand">${secondOperand}</span>
           <span class="equals">=</span>
         </div>
@@ -218,6 +247,10 @@ export class Generator {
     $(`#correctAnswer${index}`).hide()
     $(`#answer_${index}`).val("")
     $(`#answer_${index}`).focus()
+  }
+
+  getRandomOperator(numOptions) {
+    return Math.floor(Math.random() * numOptions)
   }
 
   getRandomOperand(operand) {
