@@ -8,6 +8,7 @@ export class Generator {
   static maxFirstOperand = 10
   static minSecondOperand = 0
   static maxSecondOperand = 10
+  static allowSmallerFirstOperand = true
   static numQuestions = 5
   static questions = []
   static initialLoad = true
@@ -25,9 +26,14 @@ export class Generator {
       this.minSecondOperand = parseInt(defaults.minSecond)
       $("#minSecondOperand").val(defaults.minSecond)
     }
-    if (defaults.maxFirst) {
+    if (defaults.maxSecond) {
       this.maxSecondOperand = parseInt(defaults.maxSecond)
       $("#maxSecondOperand").val(defaults.maxSecond)
+    }
+    if (defaults.allowSmallerFirst) {
+      this.allowSmallerFirstOperand = defaults.allowSmallerFirst
+      $("#allowSmallerFirstOperand")[0].checked =
+        defaults.allowSmallerFirst === "true"
     }
     if (defaults.operator) {
       this.operator = defaults.operator
@@ -165,8 +171,7 @@ export class Generator {
     let op = ""
 
     if (
-      Generator.minFirstOperand >= 0 &&
-      Generator.minSecondOperand >= 0 &&
+      $("#allowSmallerFirstOperand")[0].checked == false &&
       firstOperand < secondOperand
     ) {
       const tmp = firstOperand
