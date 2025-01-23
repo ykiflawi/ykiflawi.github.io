@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12x12 Multiplication Grid</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            overflow: auto;
+            display: flex;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 80px);
+            grid-template-rows: repeat(12, 80px);
+            gap: 10px;
+            margin: 20px;
+            width: max-content;
+        }
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ddd;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            flex-direction: column;
+        }
+        .cell input {
+            width: 60px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .cell.correct {
+            background-color: #4caf50;
+            color: white;
+        }
+        .cell.incorrect {
+            background-color: #f44336;
+            color: white;
+        }
+        .cell.autocomplete {
+            background-color: #2196f3;
+            color: white;
+        }
+        .timer {
+            margin: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .controls {
+            margin: 20px;
+        }
+        .cell small {
+            font-size: 12px;
+        }
+        .cell small.red {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid" id="grid"></div>
+    <div class="timer" id="timer">
+        <p>Time: <span id="timeElapsed">0</span> seconds</p>
+        <div class="controls">
+            <button id="autocompleteButton">Autocomplete</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate multiplication questions
+        const questions = [];
+        for (let i = 1; i <= 12; i++) {
+            for (let j = 1; j <= 12; j++) {
+                questions.push({ question: `${i} × ${j}`, answer: i * j });
+            }
+        }
+
+        // Shuffle questions
+        questions.sort(() => Math.random() - 0.5);
+
+        const grid = document.getElementById('grid');
+        const timerDisplay = document.getElementById('timeElapsed');
+        const autocompleteButton = document.getElementById('autocompleteButton');
+
+        let activeCell = null;
+        let timer = null;
+        let totalTime = 0;
+        let startTime = null;
+
+        function startTimer() {
+            if (!timer) {
+                startTime = new Date();
+                timer = setInterval(() => {
+                    totalTime = Math.floor((new Date() - startTime) / 1000);
+                    timerDisplay.textContent = totalTime;
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        // Populate grid with cells
+        questions.forEach((item, index) => {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.answer = item.answer;
+            cell.dataset.question = item.question;
+
+            cell.addEventListener('click', function () {
+                // Start the timer on the first click
+                if (!timer) startTimer();
+
+                // Hide question and input in the previously active cell, if any
+                if (activeCell && activeCell !== cell && activeCell.classList.contains('incorrect')) {
+                    activeCell.innerHTML = '';
+                }
+
+                // If the cell is clicked again, toggle the question and input display
+                if (cell === activeCell && cell.classList.contains('incorrect')) {
+                    cell.innerHTML = '';
+                    activeCell = null;
+                    return;
+                }
+
+                // Display question and input box
+                const questionStartTime = new Date();
+                cell.innerHTML = `<span>${item.question} = </span><input type="text">`;
+                const input = cell.querySelector('input');
+                input.focus();
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === 'Tab') {
+                        e.preventDefault(); // Prevent default tabbing behavior
+
+                        const userAnswer = parseInt(input.value, 10);
+                        const questionTime = Math.floor((new Date() - questionStartTime) / 1000);
+
+                        if (userAnswer === item.answer) {
+                            const timeClass = questionTime > 10 ? 'red' : '';
+                            cell.className = 'cell correct';
+                            cell.innerHTML = `<span>${item.question} = ${item.answer}</span><br><small class="${timeClass}">${questionTime}s</small>`;
+                            activeCell = null;
+                        } else {
+                            cell.className = 'cell incorrect';
+                            cell.dataset.userAnswer = input.value; // Save incorrect answer for later
+                        }
+
+                        // Move focus to the next unattempted or incorrect cell
+                        const allCells = Array.from(document.querySelectorAll('.cell'));
+                        let nextIndex = e.shiftKey ? allCells.indexOf(cell) - 1 : allCells.indexOf(cell) + 1;
+                        while (nextIndex >= 0 && nextIndex < allCells.length) {
+                            const nextCell = allCells[nextIndex];
+                            if (!nextCell.classList.contains('correct') && !nextCell.classList.contains('autocomplete')) {
+                                nextCell.click();
+                                break;
+                            }
+                            nextIndex += e.shiftKey ? -1 : 1;
+                        }
+                    }
+                });
+
+                // Set the current cell as active
+                activeCell = cell;
+            });
+
+            grid.appendChild(cell);
+        });
+
+        // Autocomplete functionality
+        autocompleteButton.addEventListener('click', function () {
+            stopTimer();
+            const allCells = document.querySelectorAll('.cell');
+            allCells.forEach((cell, index) => {
+                const question = questions[index];
+                if (cell.classList.contains('incorrect')) {
+                    const userWrongAnswer = cell.dataset.userAnswer || "-";
+                    cell.innerHTML = `<span>${question.question} = ${question.answer}</span><br><small>(${userWrongAnswer})</small>`;
+                } else if (!cell.classList.contains('correct')) {
+                    cell.className = 'cell autocomplete';
+                    cell.innerHTML = `<span>${question.question} = ${question.answer}</span>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
