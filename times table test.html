@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,20 +71,25 @@
     <div class="timer" id="timer">
         <p>Time: <span id="timeElapsed">0</span> seconds</p>
         <div class="controls">
+            <label for="lowestNumber">Lowest Number: </label>
+            <input type="text" id="lowestNumber" value="5">
+            <br>
             <label for="gridSize">Grid Size: </label>
-            <input type="number" id="gridSize" min="1" max="20" value="12">
+            <input type="text" id="gridSize" value="5">
+            <br>
             <button id="generateGridButton">Generate Grid</button>
             <button id="autocompleteButton">Autocomplete</button>
         </div>
     </div>
 
     <script>
-        let gridSize = 12;
+        let gridSize = 5;
         const grid = document.getElementById('grid');
         const timerDisplay = document.getElementById('timeElapsed');
         const autocompleteButton = document.getElementById('autocompleteButton');
         const generateGridButton = document.getElementById('generateGridButton');
         const gridSizeInput = document.getElementById('gridSize');
+        const lowestNumberInput = document.getElementById('lowestNumber');
 
         let activeCell = null;
         let timer = null;
@@ -114,8 +120,9 @@
 
         function generateQuestions(size) {
             const questions = [];
-            for (let i = 1; i <= size; i++) {
-                for (let j = 1; j <= size; j++) {
+            lowestNumber = parseInt(lowestNumberInput.value, 10);
+            for (let i = lowestNumber; i <= lowestNumber + size - 1; i++) {
+                for (let j = lowestNumber; j <= lowestNumber + size - 1; j++) {
                     questions.push({ question: `${i} × ${j}`, answer: i * j });
                 }
             }
